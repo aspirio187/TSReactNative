@@ -5,10 +5,10 @@ import { Button, SafeAreaView } from "react-native";
 import { mainStyle } from "../constants/Styles";
 import { RootStackParams } from "./ScannerScreen";
 
-type BarcodeScannerScreenProps = NativeStackScreenProps<RootStackParams, "BarcodeScanner">
+type BarcodeScannerPageProps = NativeStackScreenProps<RootStackParams, "BarcodeScanner">
 
 
-const BarCodeScannerScreen : React.FC<BarcodeScannerScreenProps> = (props) => {
+const BarCodeScannerPage : React.FC<BarcodeScannerPageProps> = (props) => {
     return(<SafeAreaView style={mainStyle.AndroidSafeArea}>
         <Button
           title={"Scanner"}
@@ -19,4 +19,4 @@ const BarCodeScannerScreen : React.FC<BarcodeScannerScreenProps> = (props) => {
       </SafeAreaView>);
 }
 
-export default BarCodeScannerScreen;
+export default BarCodeScannerPage;

@@ -15,9 +15,9 @@ import {
   NavigationProp,
   useNavigation,
 } from "@react-navigation/native";
-import BarcodeScanner from "./BarcodeScannerScreen";
-import BarcodeScannerScreen from "./BarcodeScannerScreen";
-import CameraBarcodeScanner from "./CameraBarcodeScanner";
+import BarcodeScanner from "./BarcodeScannerPage";
+import BarcodeScannerScreen from "./BarcodeScannerPage";
+import CameraBarcodeScannerPage from "./CameraBarcodePage";
 
 export type RootStackParams = {
   BarcodeScanner: undefined;
@@ -33,7 +33,7 @@ export default function ScannerScreen() {
       <Stack.Screen
         name="CameraBarcodeScanner"
         options={{ headerTitle: "Barcode scanner" }}
-        component={CameraBarcodeScanner}
+        component={CameraBarcodeScannerPage}
       />
     </Stack.Navigator>
   );

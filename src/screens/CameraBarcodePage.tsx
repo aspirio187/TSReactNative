@@ -8,7 +8,7 @@ export interface BarcodeScanned {
   data: string;
 }
 
-export default function CameraBarcodeScanner() {
+export default function CameraBarcodeScannerPage() {
   const [hasPermission, setHasPermission] = useState(false);
   const [scanned, setScanned] = useState(false);
 
