@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Alert, Button, SafeAreaView, Text, StyleSheet } from "react-native";
 import { mainStyle } from "../constants/Styles";
+import { useDispatch, useSelector } from "react-redux";
+import { selectBarcode, setBarcode } from "../redux/barcodeSlice";
+import { FoodService } from "../services/FoodService";
 
 export interface BarcodeScanned {
   type: string;
@@ -9,8 +12,11 @@ export interface BarcodeScanned {
 }
 
 export default function CameraBarcodeScannerPage() {
+  const barcode = useSelector(selectBarcode);
+  const dispatch = useDispatch();
   const [hasPermission, setHasPermission] = useState(false);
   const [scanned, setScanned] = useState(false);
+  const foodService = new FoodService();
 
   useEffect(() => {
     (async () => {
@@ -21,7 +27,8 @@ export default function CameraBarcodeScannerPage() {
 
   const handleBarCodeScanned = ({ type, data }: BarcodeScanned) => {
     setScanned(true);
-    Alert.alert("Code bar scanné: " + data);
+    dispatch(setBarcode(data));
+    foodService.getProduct(data);
   };
 
   if (hasPermission === null) {
@@ -32,11 +39,15 @@ export default function CameraBarcodeScannerPage() {
     return <Text>Accès à la caméra refusé</Text>;
   }
 
-  return <SafeAreaView style={mainStyle.AndroidSafeArea}>
-    <BarCodeScanner
+  return (
+    <SafeAreaView style={mainStyle.AndroidSafeArea}>
+      <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={[StyleSheet.absoluteFillObject, ]}
+        style={[StyleSheet.absoluteFillObject]}
       />
-      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
-  </SafeAreaView>;
+      {scanned && (
+        <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
+      )}
+    </SafeAreaView>
+  );
 }

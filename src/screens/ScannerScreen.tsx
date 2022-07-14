@@ -18,6 +18,8 @@ import {
 import BarcodeScanner from "./BarcodeScannerPage";
 import BarcodeScannerScreen from "./BarcodeScannerPage";
 import CameraBarcodeScannerPage from "./CameraBarcodePage";
+import { Provider } from "react-redux";
+import Store from "../redux/store";
 
 export type RootStackParams = {
   BarcodeScanner: undefined;
@@ -28,13 +30,15 @@ const Stack = createNativeStackNavigator<RootStackParams>();
 
 export default function ScannerScreen() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="BarcodeScanner" component={BarcodeScannerScreen} />
-      <Stack.Screen
-        name="CameraBarcodeScanner"
-        options={{ headerTitle: "Barcode scanner" }}
-        component={CameraBarcodeScannerPage}
-      />
-    </Stack.Navigator>
+    <Provider store={Store}>
+      <Stack.Navigator>
+        <Stack.Screen name="BarcodeScanner" component={BarcodeScannerScreen} />
+        <Stack.Screen
+          name="CameraBarcodeScanner"
+          options={{ headerTitle: "Barcode scanner" }}
+          component={CameraBarcodeScannerPage}
+        />
+      </Stack.Navigator>
+    </Provider>
   );
 }
