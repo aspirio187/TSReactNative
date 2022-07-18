@@ -16,6 +16,7 @@ export interface BarcodeInputProps {
   icon: string;
   errorMessage: string;
   text: string;
+  onSearchPressed(): void;
 }
 
 const BarcodeInput: React.FC<BarcodeInputProps> = ({
@@ -23,6 +24,7 @@ const BarcodeInput: React.FC<BarcodeInputProps> = ({
   icon,
   errorMessage,
   text,
+  onSearchPressed,
 }) => {
   const dispatch = useDispatch();
 
@@ -30,7 +32,7 @@ const BarcodeInput: React.FC<BarcodeInputProps> = ({
   const [hasError, setError] = React.useState(false);
 
   return (
-    <View style={{ marginBottom: 20 }}>
+    <View style={{ marginBottom: 20, marginHorizontal: 10 }}>
       <Text style={style.label}>{label}</Text>
       <View
         style={[
@@ -61,7 +63,7 @@ const BarcodeInput: React.FC<BarcodeInputProps> = ({
           onChangeText={(value) => {
             dispatch(setBarcode(value));
 
-            if (/^\d+$/.test(value)) {
+            if (value.length > 0 && /^\d+$/.test(value)) {
               setError(false);
             } else {
               setError(true);
@@ -72,17 +74,17 @@ const BarcodeInput: React.FC<BarcodeInputProps> = ({
             color: "#000",
           }}
         />
-        <Icon
-          name="magnify"
-          onPress={() => {
-            
-          }}
-          style={{
-            fontSize: 22,
-            marginHorizontal: 10,
-            color: Colors.COLOR_BLUE,
-          }}
-        />
+
+        <TouchableOpacity disabled={hasError} onPress={onSearchPressed}>
+          <Icon
+            name="magnify"
+            style={{
+              fontSize: 22,
+              marginHorizontal: 10,
+              color: Colors.COLOR_BLUE,
+            }}
+          />
+        </TouchableOpacity>
       </View>
       <View>
         {hasError && (
@@ -114,7 +116,6 @@ const style = StyleSheet.create({
     paddingHorizontal: 0.5,
     borderWidth: 0.5,
     alignItems: "center",
-    marginHorizontal: 15,
   },
 });
 

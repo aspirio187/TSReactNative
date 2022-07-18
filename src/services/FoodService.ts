@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { Product } from "../models/ProductModel";
+import Product from "../models/ProductModel";
 
 export class FoodService {
   getProduct(barcode: string): Product | null {
@@ -10,9 +10,13 @@ export class FoodService {
           return null;
         }
 
-        let barcode : string | undefined = result.data['code'];
+        let barcode: string | undefined = result.data["code"];
 
-        console.log(result.data);
+        if (barcode === undefined) return null;
+
+        let vitaminA = result.data["vitamin-a_100g"] === undefined ?  0 : result.data['vitamin-a_100g'];
+        console.log("codebar:" + barcode);
+        console.log("vitaminA: " + vitaminA);
       });
 
     return null;
