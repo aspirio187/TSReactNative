@@ -39,7 +39,7 @@ export default function ScannerScreen() {
           name="BarcodeScanner"
           component={BarcodeScannerScreen}
           options={({navigation}) =>({
-            headerTitle: "shit",
+            headerTitle: "Recherche",
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => {
