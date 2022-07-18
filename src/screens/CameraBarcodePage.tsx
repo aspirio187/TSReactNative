@@ -5,13 +5,14 @@ import { mainStyle } from "../constants/Styles";
 import { useDispatch, useSelector } from "react-redux";
 import { selectBarcode, setBarcode } from "../redux/barcodeSlice";
 import { FoodService } from "../services/FoodService";
+import { BarcodeScannerPageProps } from "./BarcodeScannerPage";
 
 export interface BarcodeScanned {
   type: string;
   data: string;
 }
 
-export default function CameraBarcodeScannerPage() {
+const CameraBarcodeScannerPage : React.FC<BarcodeScannerPageProps> = (props) => {
   const barcode = useSelector(selectBarcode);
   const dispatch = useDispatch();
   const [hasPermission, setHasPermission] = useState(false);
@@ -29,6 +30,7 @@ export default function CameraBarcodeScannerPage() {
     setScanned(true);
     dispatch(setBarcode(data));
     foodService.getProduct(data);
+    props.navigation.pop();
   };
 
   if (hasPermission === null) {
@@ -43,7 +45,7 @@ export default function CameraBarcodeScannerPage() {
     <SafeAreaView style={mainStyle.AndroidSafeArea}>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={[StyleSheet.absoluteFillObject]}
+        style={[StyleSheet.absoluteFillObject, {height:450}]}
       />
       {scanned && (
         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
@@ -51,3 +53,5 @@ export default function CameraBarcodeScannerPage() {
     </SafeAreaView>
   );
 }
+
+export default CameraBarcodeScannerPage;

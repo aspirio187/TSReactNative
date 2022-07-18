@@ -1,25 +1,27 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import React from "react";
+import { StyleSheet, View, Text, TextInput } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useDispatch } from "react-redux";
 import Colors from "../constants/Colors";
+import { setBarcode } from "../redux/barcodeSlice";
 
-export interface InputProps {
+export interface BarcodeInputProps {
   label: string;
-  iconName: string;
+  icon: string;
   errorMessage: string;
-  password: boolean;
-  onFocus: () => {};
+  text: string;
 }
 
-const Input: React.FC<InputProps> = ({
+const BarcodeInput: React.FC<BarcodeInputProps> = ({
   label,
-  iconName,
-  errorMessage: error,
-  password,
-  onFocus,
+  icon,
+  errorMessage,
+  text,
 }) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const dispatch = useDispatch();
+
+  const [isFocused, setIsFocused] = React.useState(false);
+  const [hasError, setError] = React.useState(false);
 
   return (
     <View style={{ marginBottom: 20 }}>
@@ -37,7 +39,7 @@ const Input: React.FC<InputProps> = ({
         ]}
       >
         <Icon
-          name={iconName}
+          name={icon}
           style={{
             fontSize: 22,
             color: Colors.COLOR_BLUE,
@@ -45,20 +47,18 @@ const Input: React.FC<InputProps> = ({
           }}
         />
         <TextInput
-          keyboardType="email-address"
+          keyboardType="numeric"
           autoCorrect={false}
-          onFocus={() => {
-            onFocus();
-            setIsFocused(true);
-          }}
-          onBlur={() => {
-            setIsFocused(false);
-          }}
-          onChangeText={(text) => {
-            if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(text)) {
-              setHasError(true);
+          value={text}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onChangeText={(value) => {
+            dispatch(setBarcode(value));
+
+            if (/^\d+$/.test(value)) {
+              setError(false);
             } else {
-              setHasError(false);
+              setError(true);
             }
           }}
           style={{
@@ -67,11 +67,19 @@ const Input: React.FC<InputProps> = ({
           }}
         />
       </View>
-      {hasError && (
-        <Text style={{ color: Colors.COLOR_RED, fontSize: 12, marginTop: 7 }}>
-          {error}
-        </Text>
-      )}
+      <View>
+        {hasError && (
+          <Text
+            style={{
+              color: Colors.COLOR_RED,
+              fontSize: 12,
+              marginTop: 7,
+            }}
+          >
+            {errorMessage}
+          </Text>
+        )}
+      </View>
     </View>
   );
 };
@@ -92,4 +100,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default Input;
+export default BarcodeInput;

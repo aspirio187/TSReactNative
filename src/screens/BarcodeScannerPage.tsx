@@ -1,14 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import { Button, SafeAreaView, Text } from "react-native";
+import { Button, SafeAreaView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import BarcodeInput from "../components/BarcodeInput";
+import Input from "../components/Input";
 import { mainStyle } from "../constants/Styles";
 import { selectBarcode } from "../redux/barcodeSlice";
 import { FoodService } from "../services/FoodService";
 import { RootStackParams } from "./ScannerScreen";
 
-type BarcodeScannerPageProps = NativeStackScreenProps<
+export type BarcodeScannerPageProps = NativeStackScreenProps<
   RootStackParams,
   "BarcodeScanner"
 >;
@@ -20,14 +22,25 @@ const BarCodeScannerPage: React.FC<BarcodeScannerPageProps> = (props) => {
 
   return (
     <SafeAreaView style={mainStyle.AndroidSafeArea}>
-      <Button
-        title={"Scanner"}
-        onPress={() => {
-          props.navigation.push("CameraBarcodeScanner");
-        }}
-      />
+      <View style={{
+        flex:1,
+        alignContent: "center",
+        justifyContent:"center"
+      }}>
+        <Button
+          title={"Scanner"}
+          onPress={() => {
+            props.navigation.push("CameraBarcodeScanner");
+          }}
+        />
 
-      <Text>{barcode}</Text>
+        <BarcodeInput
+          errorMessage="message d'erreur"
+          icon="barcode"
+          label="Code bar"
+          text={barcode}
+        />
+      </View>
     </SafeAreaView>
   );
 };
