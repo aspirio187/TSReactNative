@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch } from "react-redux";
 import Colors from "../constants/Colors";
@@ -62,8 +68,19 @@ const BarcodeInput: React.FC<BarcodeInputProps> = ({
             }
           }}
           style={{
-            color: "#000",
             flex: 1,
+            color: "#000",
+          }}
+        />
+        <Icon
+          name="magnify"
+          onPress={() => {
+            
+          }}
+          style={{
+            fontSize: 22,
+            marginHorizontal: 10,
+            color: Colors.COLOR_BLUE,
           }}
         />
       </View>
@@ -97,6 +114,7 @@ const style = StyleSheet.create({
     paddingHorizontal: 0.5,
     borderWidth: 0.5,
     alignItems: "center",
+    marginHorizontal: 15,
   },
 });
 

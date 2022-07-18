@@ -22,23 +22,23 @@ const BarCodeScannerPage: React.FC<BarcodeScannerPageProps> = (props) => {
 
   return (
     <SafeAreaView style={mainStyle.AndroidSafeArea}>
-      <View style={{
-        flex:1,
-        alignContent: "center",
-        justifyContent:"center"
-      }}>
-        <Button
-          title={"Scanner"}
-          onPress={() => {
-            props.navigation.push("CameraBarcodeScanner");
-          }}
-        />
-
+      <View
+        style={{
+          flex: 1,
+        }}
+      >
         <BarcodeInput
           errorMessage="message d'erreur"
           icon="barcode"
           label="Code bar"
           text={barcode}
+        />
+        <Button
+          title={"Scanner"}
+          onPress={() => {
+            props.navigation.push("CameraBarcodeScanner");
+          }}
+          
         />
       </View>
     </SafeAreaView>

@@ -1,4 +1,4 @@
-export class Product {
+export default class Product {
   barcode: string;
   name: string;
   imgSmallUrl: string;
