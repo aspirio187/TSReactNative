@@ -1,7 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import { Button, SafeAreaView, Text, View } from "react-native";
+import {
+  Button,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import BarcodeInput from "../components/BarcodeInput";
 import Input from "../components/Input";
@@ -23,12 +30,13 @@ const BarCodeScannerPage: React.FC<BarcodeScannerPageProps> = (props) => {
   const [product, setProduct] = React.useState<Product>();
 
   const handleSearch = () => {
-    let product = foodService.getProduct(barcode);
-    setProduct(product ?? undefined);
+    let product = foodService.getProduct(barcode).then((value) => {
+      setProduct(value ?? undefined);
+    });
   };
 
   return (
-    <SafeAreaView style={mainStyle.AndroidSafeArea}>
+    <ScrollView style={mainStyle.AndroidSafeArea}>
       <View
         style={{
           flex: 1,
@@ -42,8 +50,19 @@ const BarCodeScannerPage: React.FC<BarcodeScannerPageProps> = (props) => {
           onSearchPressed={handleSearch}
         />
       </View>
-      <View></View>
-    </SafeAreaView>
+      <View>
+        <Image source={{ uri: product?.imgUrl }} style={{ height: 250 }} />
+        <Text
+          style={{
+            fontSize: 22,
+            color: "#000",
+            fontWeight: "bold",
+          }}
+        >
+          {product?.name}
+        </Text>
+      </View>
+    </ScrollView>
   );
 };
 
