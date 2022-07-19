@@ -3,8 +3,6 @@ import Product from "../models/ProductModel";
 
 export class FoodService {
   async getProduct(barcode: string): Promise<Product | null> {
-    let finalProduct: Product;
-
     let result = await axios.get(
       "https://world.openfoodfacts.org/api/v2/product/" + barcode
     );
@@ -34,8 +32,8 @@ export class FoodService {
         ? "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"
         : product["image_url"];
 
-    let energyKj: number =
-      product["energy-kj_100g"] === undefined ? 0 : product["energy-kg_100g"];
+    let energyKj =
+      product["energy-kj_100g"] === undefined ? 0 : product["energy-kj_100g"];
 
     let energyKCal =
       product["energy-kcal_100g"] === undefined
@@ -82,7 +80,7 @@ export class FoodService {
     let vitaminPP =
       product["vitamin-pp_100g"] === undefined ? 0 : product["vitamin-pp_100g"];
 
-    product = new Product(
+    return new Product(
       barcode,
       name,
       imgSmallUrl,
@@ -103,7 +101,5 @@ export class FoodService {
       vitaminK,
       vitaminPP
     );
-
-    return product;
   }
 }
