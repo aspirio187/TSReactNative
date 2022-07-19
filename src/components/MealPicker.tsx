@@ -21,7 +21,7 @@ const MealPicker: React.FC<MealPickerProps> = ({
         flexDirection: "row",
         justifyContent: "space-between",
         margin: 5,
-        borderBottomWidth: 0.5,
+        borderBottomWidth: 0.2,
         paddingBottom: 10
       }}
     >

@@ -6,7 +6,7 @@ interface BarcodeState {
 }
 
 const initialState: BarcodeState = {
-  barcode: "",
+  barcode: "5410013111009",
 };
 
 export const barcodeSlice = createSlice({
