@@ -10,8 +10,7 @@ export interface MealPickerProps {
 }
 
 const MealPicker: React.FC<MealPickerProps> = ({
-  children,
-  selected,
+  selected = "something",
   mealTypes,
   setSelected,
 }) => {
@@ -20,9 +19,8 @@ const MealPicker: React.FC<MealPickerProps> = ({
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        margin: 5,
         borderBottomWidth: 0.2,
-        paddingBottom: 10
+        paddingVertical: 12,
       }}
     >
       <Text
@@ -54,8 +52,7 @@ const MealPicker: React.FC<MealPickerProps> = ({
         label="Sélectionnez un repas"
         setSelected={setSelected}
         renderListItem={function (
-          item: string,
-          index: number
+          item: string
         ): ReactElement<any, string | JSXElementConstructor<any>> {
           return (
             <TouchableOpacity

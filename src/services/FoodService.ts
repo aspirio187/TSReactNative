@@ -32,53 +32,56 @@ export class FoodService {
         ? "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"
         : product["image_url"];
 
+
+    let nutriments = product["nutriments"];
+
     let energyKj =
-      product["energy-kj_100g"] === undefined ? 0 : product["energy-kj_100g"];
+    nutriments["energy-kj_100g"] === undefined ? 0 : nutriments["energy-kj_100g"];
 
     let energyKCal =
-      product["energy-kcal_100g"] === undefined
+    nutriments["energy-kcal_100g"] === undefined
         ? 0
-        : product["energy-kcal_100g"];
+        : nutriments["energy-kcal_100g"];
 
     let carboHydrates =
-      product["carboHydrates_100g"] === undefined
+      nutriments["carbohydrates_100g"] === undefined
         ? 0
-        : product["carboHydrates_100g"];
+        : nutriments["carbohydrates_100g"];
 
     let protein =
-      product["proteins_100g"] === undefined ? 0 : product["proteins_100g"];
+    nutriments["proteins_100g"] === undefined ? 0 : nutriments["proteins_100g"];
 
-    let fat = product["fat_100g"] === undefined ? 0 : product["fat_100g"];
+    let fat = nutriments["fat_100g"] === undefined ? 0 : nutriments["fat_100g"];
 
     let vitaminA =
-      product["vitamin-a_100g"] === undefined ? 0 : product["vitamin-a_100g"];
+    nutriments["vitamin-a_100g"] === undefined ? 0 : nutriments["vitamin-a_100g"];
 
     let vitaminB1 =
-      product["vitamin-b1_100g"] === undefined ? 0 : product["vitamin-b1_100g"];
+    nutriments["vitamin-b1_100g"] === undefined ? 0 : nutriments["vitamin-b1_100g"];
 
     let vitaminB2 =
-      product["vitamin-b2_100g"] === undefined ? 0 : product["vitamin-b2_100g"];
+    nutriments["vitamin-b2_100g"] === undefined ? 0 : nutriments["vitamin-b2_100g"];
 
     let vitaminB6 =
-      product["vitamin-b6_100g"] === undefined ? 0 : product["vitamin-b6_100g"];
+    nutriments["vitamin-b6_100g"] === undefined ? 0 : nutriments["vitamin-b6_100g"];
 
     let vitaminB9 =
-      product["vitamin-b9_100g"] === undefined ? 0 : product["vitamin-b9_100g"];
+    nutriments["vitamin-b9_100g"] === undefined ? 0 : nutriments["vitamin-b9_100g"];
 
     let vitaminC =
-      product["vitamin-c_100g"] === undefined ? 0 : product["vitamin-c_100g"];
+    nutriments["vitamin-c_100g"] === undefined ? 0 : nutriments["vitamin-c_100g"];
 
     let vitaminD =
-      product["vitamin-d_100g"] === undefined ? 0 : product["vitamin-d_100g"];
+    nutriments["vitamin-d_100g"] === undefined ? 0 : nutriments["vitamin-d_100g"];
 
     let vitaminE =
-      product["vitamin-e_100g"] === undefined ? 0 : product["vitamin-e_100g"];
+    nutriments["vitamin-e_100g"] === undefined ? 0 : nutriments["vitamin-e_100g"];
 
     let vitaminK =
-      product["vitamin-k_100g"] === undefined ? 0 : product["vitamin-k_100g"];
+    nutriments["vitamin-k_100g"] === undefined ? 0 : nutriments["vitamin-k_100g"];
 
     let vitaminPP =
-      product["vitamin-pp_100g"] === undefined ? 0 : product["vitamin-pp_100g"];
+    nutriments["vitamin-pp_100g"] === undefined ? 0 : nutriments["vitamin-pp_100g"];
 
     return new Product(
       barcode,

@@ -100,21 +100,31 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
           />
         </G>
       </Svg>
-      <AnimatedInput
-        ref={inputRef}
-        underlineColorAndroid="transparent"
-        editable={false}
-        defaultValue="0"
+      <View
         style={[
           StyleSheet.absoluteFillObject,
           {
-            fontSize: radius / 2,
-            color: textColor ?? Colors.COLOR_BLUE,
-            fontWeight: "bold",
-            textAlign: "center",
+            alignItems: "center",
+            justifyContent: "center"
           },
         ]}
-      />
+      >
+        <AnimatedInput
+          ref={inputRef}
+          underlineColorAndroid="transparent"
+          editable={false}
+          defaultValue="0"
+          style={[
+            {
+              fontSize: radius / 2,
+              color: textColor ?? Colors.COLOR_BLUE,
+              fontWeight: "bold",
+              textAlign: "center",
+            },
+          ]}
+        />
+        <Text>KCal</Text>
+      </View>
     </View>
   );
 };
