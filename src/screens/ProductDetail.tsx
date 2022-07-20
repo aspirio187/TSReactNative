@@ -15,6 +15,8 @@ import Colors from "../constants/Colors";
 import Product from "../models/ProductModel";
 import MealPicker from "../components/MealPicker";
 import { FoodService } from "../services/FoodService";
+import CircularProgress from "../components/CircularProgress";
+import { PrivateValueStore } from "@react-navigation/native";
 
 const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
   const barcode = useSelector(selectBarcode);
@@ -25,12 +27,14 @@ const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
   const mealTypes = ["Petit-déjeuner", "Déjeuner", "Dîner", "Snacks"];
 
   React.useEffect(() => {
-    foodService.getProduct(barcode).then((value) => {
-      if (product != null) {
-        setProduct(value);
-      }
-    });
-  });
+    const fetchProduct = async () => {
+      const product = await foodService.getProduct(barcode);
+
+      setProduct(product);
+    };
+
+    fetchProduct().catch(console.error);
+  }, []);
 
   return (
     <ScrollView>
@@ -58,7 +62,16 @@ const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
         }}
       >
         <View>
-
+          <CircularProgress
+            actualValue={product?.energyKCal as number}
+            radius={40}
+            strokeWidth={10}
+            duration={500}
+            color={Colors.COLOR_DARK_GREEN}
+            delay={0}
+            textColor={Colors.COLOR_BLUE}
+            max={2500}
+          />
         </View>
         <View
           style={{

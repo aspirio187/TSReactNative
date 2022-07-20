@@ -14,11 +14,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "infoPlist" : {
-        "NSCameraUsageDescription" : "This app uses the camera to let the user scan barcode."
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to let the user scan barcode."
       }
     },
     "android": {
@@ -26,10 +28,14 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions": ["CAMERA"]
+      "permissions": [
+        "CAMERA"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
-  }
+    },
+    "sdkVersion": "45.0.0"
+  },
+  "name": "tsreactnative"
 }
