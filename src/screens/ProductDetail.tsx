@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
+  Button,
 } from "react-native";
 import React, { JSXElementConstructor, ReactElement } from "react";
 import { BarcodeScannerPageProps } from "./BarcodeScannerPage";
@@ -19,6 +20,7 @@ import { FoodService } from "../services/FoodService";
 import CircularProgress from "../components/CircularProgress";
 import { PrivateValueStore } from "@react-navigation/native";
 import NutrimentCounter from "../components/NutrimentCounter";
+import ConsumedProduct from "../models/ConsumedProductModel";
 
 const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
   const barcode = useSelector(selectBarcode);
@@ -28,6 +30,7 @@ const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
   const [fat, setFat] = React.useState<number>();
   const [protein, setProtein] = React.useState<number>();
   const [energyKCal, setEnergyKCal] = React.useState<number>();
+  const [quantity, setQuantity] = React.useState<number>(100);
   const foodService = new FoodService();
 
   let carboHydratesRef = React.createRef();
@@ -129,7 +132,7 @@ const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
 
         <TextInput
           keyboardType="number-pad"
-          defaultValue="100"
+          defaultValue={quantity.toFixed(2)}
           style={{
             borderBottomWidth: 0.2,
             padding: 0.5,
@@ -145,6 +148,7 @@ const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
               setFat((product?.fat! / 100) * quantity);
               setProtein((product?.protein! / 100) * quantity);
               setEnergyKCal((product?.energyKCal! / 100) * quantity);
+              setQuantity(quantity);
             }
           }}
         />
@@ -156,7 +160,27 @@ const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
           flex: 1,
           alignItems: "center",
         }}
-      ></View>
+      >
+        <Button
+          title="Ajouter"
+          onPress={() => {
+            let consumedProduct = new ConsumedProduct(
+              quantity,
+              selected!,
+              product?.barcode!
+            );
+
+            foodService.saveProduct(consumedProduct, (result) => {
+              if (result > 0) {
+                console.log("Product save on button press");
+                props.navigation.pop();
+              } else {
+                console.log("product not saved on button press");
+              }
+            });
+          }}
+        />
+      </View>
     </ScrollView>
   );
 };

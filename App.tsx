@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Tabs from './src/navigations/Tabs';
 
 export default function App() {
+
   return (
     <NavigationContainer>
       <Tabs />
