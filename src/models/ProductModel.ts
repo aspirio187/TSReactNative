@@ -1,3 +1,5 @@
+import { createRealmContext } from "@realm/react";
+
 export default class Product {
   barcode: string;
   name: string;
@@ -62,5 +64,55 @@ export default class Product {
     this.vitaminE = vitaminE;
     this.vitaminK = vitaminK;
     this.vitaminPP = vitaminPP;
+  }
+
+  public static schema: Realm.ObjectSchema = {
+    name: "Product",
+    properties: {
+      barcode: "string",
+      name: "string",
+      imgSmallUrl: "string",
+      imgUrl: "string",
+      carboHydrates: "double",
+      protein: "double",
+      fat: "double",
+      energyKj: "double",
+      energyKCal: "double",
+      vitaminA: "double",
+      vitaminB1: "double",
+      vitaminB2: "double",
+      vitaminB6: "double",
+      vitaminB9: "double",
+      vitaminC: "double",
+      vitaminD: "double",
+      vitaminE: "double",
+      vitaminK: "double",
+      vitaminPP: "double",
+    },
+    primaryKey: "barcode",
+  };
+
+  public static fromJson(json: any): Product {
+    return new Product(
+      json["barcode"],
+      json["name"],
+      json["imgSmallUrl"],
+      json["imgUrl"],
+      json["carboHydrates"],
+      json["protein"],
+      json["fat"],
+      json["energyKj"],
+      json["energyKCal"],
+      json["vitaminA"],
+      json["vitaminB1"],
+      json["vitaminB2"],
+      json["vitaminB6"],
+      json["vitaminB9"],
+      json["vitaminC"],
+      json["vitaminD"],
+      json["vitaminE"],
+      json["vitaminK"],
+      json["vitaminPP"]
+    );
   }
 }

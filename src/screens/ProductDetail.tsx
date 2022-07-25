@@ -167,8 +167,12 @@ const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
             let consumedProduct = new ConsumedProduct(
               quantity,
               selected!,
-              product?.barcode!
+              product?.barcode!,
+              Date.now()
             );
+
+            let result = foodService.saveRealmProduct(product!);
+            console.log("Result of realm save : " + result);
 
             foodService.saveProduct(consumedProduct, (result) => {
               if (result > 0) {

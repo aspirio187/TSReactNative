@@ -3,8 +3,9 @@ import Product from "../models/ProductModel";
 import ConsumedProduct from "../models/ConsumedProductModel";
 
 import * as SQLite from "expo-sqlite";
+import { Realm, createRealmContext } from "@realm/react";
+
 import { DATABASE_NAME } from "../constants/Names";
-import { TextBase } from "react-native";
 
 export class FoodService {
   async getProduct(barcode: string): Promise<Product | null> {
@@ -111,7 +112,11 @@ export class FoodService {
         ? 0
         : nutriments["vitamin-pp_100g"];
 
-    return new Product(
+    const realm = await Realm.open({
+      schema: [Product.schema],
+    });
+
+    let finalProduct = new Product(
       barcode,
       name,
       imgSmallUrl,
@@ -132,6 +137,93 @@ export class FoodService {
       vitaminK,
       vitaminPP
     );
+
+    return finalProduct;
+  }
+
+  async getProducts(): Promise<Product[]> {
+    const realm = await Realm.open({ schema: [Product.schema] });
+
+    const products = realm.objects("Product");
+
+    return products.map((val) => Product.fromJson(val.toJSON()));
+  }
+
+  async getLocalProduct(barcode: string): Promise<Product | null> {
+    const realm = await Realm.open({ schema: [Product.schema] });
+
+    let result = realm
+      .objects("Product")
+      .find((val) => {
+        return (
+          val.entries().find((val) => {
+            if (val[0] == "barcode" && val[1] == barcode) {
+              return val;
+            }
+          }) != undefined
+        );
+      })
+      ?.toJSON();
+
+    if (result == undefined) {
+      return null;
+    }
+
+    return Product.fromJson(result);
+  }
+
+  async saveRealmProduct(product: Product): Promise<string> {
+    const realm = await Realm.open({ schema: [Product.schema] });
+
+    let productFromDb = await this.getLocalProduct(product.barcode);
+
+    realm.write(() => {
+      if (productFromDb == null) {
+        realm.create("Product", {
+          barcode: product.barcode,
+          name: product.name,
+          imgSmallUrl: product.imgSmallUrl,
+          imgUrl: product.imgUrl,
+          carboHydrates: product.carboHydrates,
+          protein: product.protein,
+          fat: product.fat,
+          energyKj: product.energyKj,
+          energyKCal: product.energyKCal,
+          vitaminA: product.vitaminA,
+          vitaminB1: product.vitaminB1,
+          vitaminB2: product.vitaminB2,
+          vitaminB6: product.vitaminB6,
+          vitaminB9: product.vitaminB9,
+          vitaminC: product.vitaminC,
+          vitaminD: product.vitaminD,
+          vitaminE: product.vitaminE,
+          vitaminK: product.vitaminK,
+          vitaminPP: product.vitaminPP,
+        });
+      } else {
+        productFromDb.barcode = product.barcode;
+        productFromDb.name = product.name;
+        productFromDb.imgSmallUrl = product.imgSmallUrl;
+        productFromDb.imgUrl = product.imgUrl;
+        productFromDb.carboHydrates = product.carboHydrates;
+        productFromDb.protein = product.protein;
+        productFromDb.fat = product.fat;
+        productFromDb.energyKj = product.energyKj;
+        productFromDb.energyKCal = product.energyKCal;
+        productFromDb.vitaminA = product.vitaminA;
+        productFromDb.vitaminB1 = product.vitaminB1;
+        productFromDb.vitaminB2 = product.vitaminB2;
+        productFromDb.vitaminB6 = product.vitaminB6;
+        productFromDb.vitaminB9 = product.vitaminB9;
+        productFromDb.vitaminC = product.vitaminC;
+        productFromDb.vitaminD = product.vitaminD;
+        productFromDb.vitaminE = product.vitaminE;
+        productFromDb.vitaminK = product.vitaminK;
+        productFromDb.vitaminPP = product.vitaminPP;
+      }
+    });
+
+    return product.barcode;
   }
 
   initDatabase() {
@@ -144,7 +236,8 @@ export class FoodService {
           "id INTEGER PRIMARY KEY AUTOINCREMENT," +
           "quantity NUMBER," +
           "meal_type VARCHAR(50)," +
-          "product_barcode VARCHAR(20))",
+          "product_barcode VARCHAR(20)," +
+          "consumed_at NUMBER)",
         []
       );
     });
@@ -161,8 +254,13 @@ export class FoodService {
 
     db.transaction((txn) => {
       txn.executeSql(
-        "INSERT INTO consumed_products(quantity, meal_type, product_barcode) VALUES (?,?,?)",
-        [product.quantity, product.mealType, product.productBarcode],
+        "INSERT INTO consumed_products(quantity, meal_type, product_barcode, consumed_at) VALUES (?,?,?,?)",
+        [
+          product.quantity,
+          product.mealType,
+          product.productBarcode,
+          product.consumedAt,
+        ],
         (tx, results) => {
           console.log("Result : " + results.rowsAffected);
 
