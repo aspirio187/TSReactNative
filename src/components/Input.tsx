@@ -1,22 +1,34 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  KeyboardTypeOptions,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Colors from "../constants/Colors";
 
 export interface InputProps {
+  defaultValue?: string;
   label: string;
   iconName: string;
   errorMessage: string;
-  password: boolean;
-  onFocus: () => {};
+  validation: (text: string) => boolean;
+  keyboardType?: KeyboardTypeOptions | undefined;
+  password?: boolean;
+  textChanged?: (text: string) => void;
 }
 
 const Input: React.FC<InputProps> = ({
+  defaultValue,
   label,
   iconName,
   errorMessage: error,
-  password,
-  onFocus,
+  validation,
+  keyboardType,
+  password = false,
+  textChanged,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -45,20 +57,24 @@ const Input: React.FC<InputProps> = ({
           }}
         />
         <TextInput
-          keyboardType="email-address"
+          keyboardType={keyboardType}
           autoCorrect={false}
+          defaultValue={defaultValue}
           onFocus={() => {
-            onFocus();
             setIsFocused(true);
           }}
           onBlur={() => {
             setIsFocused(false);
           }}
           onChangeText={(text) => {
-            if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(text)) {
-              setHasError(true);
-            } else {
+            if (validation(text)) {
               setHasError(false);
+            } else {
+              setHasError(true);
+            }
+
+            if (textChanged != undefined) {
+              textChanged!(text);
             }
           }}
           style={{
@@ -79,6 +95,7 @@ const Input: React.FC<InputProps> = ({
 const style = StyleSheet.create({
   label: {
     marginVertical: 5,
+    paddingLeft: 7,
     fontSize: 14,
     color: "#D3D3D3",
   },

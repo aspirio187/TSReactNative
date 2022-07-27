@@ -5,6 +5,7 @@ import ConsumedProduct from "../models/ConsumedProductModel";
 import * as SQLite from "expo-sqlite";
 
 import { DATABASE_NAME } from "../constants/Names";
+import { WebSQLDatabase } from "expo-sqlite";
 
 export class FoodService {
   async getProduct(barcode: string): Promise<Product | null> {
@@ -136,10 +137,26 @@ export class FoodService {
     return finalProduct;
   }
 
-  initDatabase() {
-    // enablePromise(true);
-    let db = SQLite.openDatabase(DATABASE_NAME);
+  initDatabase(): WebSQLDatabase {
+    // this.dropDatabase();
+
+    const db = SQLite.openDatabase(DATABASE_NAME);
     db.transaction((txn) => {
+      txn.executeSql(
+        "CREATE TABLE IF NOT EXISTS " +
+          "products(" +
+          "barcode TEXT," +
+          "name TEXT," +
+          "img_small_url TEXT," +
+          "img_url TEXT" +
+          "carbo_hydrates REAL," +
+          "protein REAL," +
+          "fat REAL," +
+          "energy_kj REAL," +
+          "energy_kcal REAL)",
+        []
+      );
+
       txn.executeSql(
         "CREATE TABLE IF NOT EXISTS " +
           "consumed_products(" +
@@ -153,6 +170,74 @@ export class FoodService {
     });
 
     return db;
+  }
+
+  async getConsumedProducts(callback: (result: ConsumedProduct[]) => void) {
+    const db = this.initDatabase();
+
+    db.transaction((txn) => {
+      txn.executeSql(
+        "SELECT * FROM consumed_products",
+        [],
+        async (_tx, result) => {
+          let len = result.rows.length;
+          let products: ConsumedProduct[] = [];
+
+          if (len > 0) {
+            console.log(len + " consumed products retrieved");
+
+            for (let i = 0; i < result.rows._array.length; i++) {
+              console.log("Products loaded");
+              console.log(result.rows.item(i));
+
+              const element = result.rows.item(i);
+
+              let productBarcode = element["product_barcode"];
+
+              let product: Product | null = await this.getProduct(
+                productBarcode
+              );
+
+              const consumedProduct = new ConsumedProduct(
+                element["quantity"],
+                element["meal_type"],
+                element["product_barcode"],
+                element["consumed_at"],
+                element["id"],
+                product!
+              );
+
+              console.log("product pushed");
+              console.log(consumedProduct);
+
+              products.push(consumedProduct);
+            }
+          } else {
+            console.log("The consumed products list is empty");
+            console.log(result.rows._array);
+          }
+
+          callback.call(this, products);
+        },
+        (error) => {
+          console.log(
+            "An error ocurred while trying to retrieve data from the local database!"
+          );
+          console.log(error);
+
+          return false;
+        }
+      );
+    });
+  }
+
+  dropDatabase() {
+    const db = SQLite.openDatabase(DATABASE_NAME);
+
+    db.transaction((txn) => {
+      txn.executeSql("DROP TABLE IF EXISTS products");
+      txn.executeSql("DROP TABLE IF EXISTS consumed_products");
+    });
   }
 
   saveProduct(product: ConsumedProduct, callback: (result: number) => void) {

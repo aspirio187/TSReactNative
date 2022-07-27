@@ -28,6 +28,7 @@ const CameraBarcodeScannerPage : React.FC<BarcodeScannerPageProps> = (props) => 
 
   const handleBarCodeScanned = ({ type, data }: BarcodeScanned) => {
     setScanned(true);
+
     dispatch(setBarcode(data));
     props.navigation.pop();
   };
