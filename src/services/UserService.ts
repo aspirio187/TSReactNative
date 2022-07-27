@@ -7,6 +7,8 @@ import User from "../models/UserModel";
 
 export default class UserService {
   initDatabase(): WebSQLDatabase {
+    // this.dropDatabase();
+
     const db = SQLite.openDatabase(DATABASE_NAME);
 
     db.transaction((txn) => {

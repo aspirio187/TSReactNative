@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import React, { JSXElementConstructor, ReactElement } from "react";
 import { BarcodeScannerPageProps } from "./BarcodeScannerPage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectBarcode } from "../redux/barcodeSlice";
 import Colors from "../constants/Colors";
 import Product from "../models/ProductModel";
@@ -21,8 +21,10 @@ import CircularProgress from "../components/CircularProgress";
 import { PrivateValueStore } from "@react-navigation/native";
 import NutrimentCounter from "../components/NutrimentCounter";
 import ConsumedProduct from "../models/ConsumedProductModel";
+import { setConsumedProductsModified } from "../redux/consumedProductSlice";
 
 const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
+  const dispatch = useDispatch();
   const barcode = useSelector(selectBarcode);
   const [product, setProduct] = React.useState<Product | null>(null);
   const [selected, setSelected] = React.useState<string | undefined>();
@@ -174,6 +176,7 @@ const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
             foodService.saveProduct(consumedProduct, (result) => {
               if (result > 0) {
                 console.log("Product save on button press");
+                dispatch(setConsumedProductsModified(true));
                 props.navigation.pop();
               } else {
                 console.log("product not saved on button press");

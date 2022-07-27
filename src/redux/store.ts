@@ -1,11 +1,24 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  combineReducers,
+  getDefaultMiddleware,
+} from "@reduxjs/toolkit";
 import { barcodeSlice } from "./barcodeSlice";
+import { consumedProductsModifiedSlice } from "./consumedProductSlice";
+import { userSlice } from "./userSlice";
 
 const rootReducer = combineReducers({});
 
 const Store = configureStore({
   reducer: {
     barcode: barcodeSlice.reducer,
+    consumedProducts: consumedProductsModifiedSlice.reducer,
+    user: userSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware({
+      serializableCheck: false,
+    });
   },
 });
 

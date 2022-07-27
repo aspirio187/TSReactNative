@@ -6,15 +6,20 @@ import {
   View,
   Button,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import Input from "../components/Input";
 import Colors from "../constants/Colors";
 import { mainStyle } from "../constants/Styles";
 import User from "../models/UserModel";
+import { selectUser, setUserJson } from "../redux/userSlice";
 import UserService from "../services/UserService";
 
 export default function ProfileScreen() {
+  const userJson = useSelector(selectUser);
+  const dispatch = useDispatch();
+
   const userService: UserService = new UserService();
-  const [user, setUser] = React.useState<User | undefined>(undefined);
+
   const [firstName, setFirstName] = React.useState<string>("");
   const [lastName, setLastName] = React.useState<string>("");
   const [goal, setGoal] = React.useState<number>(0);
@@ -22,20 +27,12 @@ export default function ProfileScreen() {
   const [isCreated, setIsCreated] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    handleUser();
-  }, []);
+    const parsedUser: User | undefined = JSON.parse(userJson);
 
-  const handleUser = () => {
-    if (user === undefined) {
-      userService.getUser((result) => {
-        if (result === undefined) {
-          setUser(new User("", "", 0));
-        } else {
-          setUser(result);
-        }
-      });
-    }
-  };
+    setFirstName(parsedUser === undefined ? "" : parsedUser.firstName);
+    setLastName(parsedUser === undefined ? "" : parsedUser.lastName);
+    setGoal(parsedUser === undefined ? 0 : parsedUser.goal);
+  }, [userJson]);
 
   return (
     <>
@@ -108,19 +105,18 @@ export default function ProfileScreen() {
             firstName == undefined && lastName == undefined && goal == undefined
           }
           onPress={() => {
-            if (user === undefined) {
-              setErrorMessage(
-                "L'utilisateur est indéfinis. Veuillez recharger l'application!"
-              );
-            }
+            console.log("User json value");
+            console.log(userJson);
 
+            let user = new User(firstName, lastName, goal);
+
+            console.log("Instanciated user");
             console.log(user);
-
-            setUser(new User(firstName, lastName, goal));
 
             if (user?.isValid == true) {
               userService.saveUser(user, (result: boolean) => {
                 if (result === true) {
+                  dispatch(setUserJson(JSON.stringify(user)));
                   setIsCreated(true);
                   setErrorMessage("");
                 }

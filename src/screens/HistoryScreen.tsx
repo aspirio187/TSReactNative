@@ -7,11 +7,20 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import { mainStyle } from "../constants/Styles";
 import ConsumedProduct from "../models/ConsumedProductModel";
+import {
+  selectConsumedProductsModified,
+  setConsumedProductsModified,
+} from "../redux/consumedProductSlice";
 import { FoodService } from "../services/FoodService";
 
 const HomeScreen = () => {
+  const selectConsumedProductModified = useSelector(
+    selectConsumedProductsModified
+  );
+  const dispatch = useDispatch();
   const foodService = new FoodService();
   const [consumedProducts, setConsumedProducts] = React.useState<
     ConsumedProduct[]
@@ -19,13 +28,22 @@ const HomeScreen = () => {
 
   React.useEffect(() => {
     handleProductLoading();
-  }, []);
+
+    if (consumedProducts.length > 0) {
+      console.log("Consumed products list isn't empty. Reloading the list");
+      if (selectConsumedProductModified) {
+        console.log("Reload start");
+        handleProductLoading();
+      }
+    }
+  }, [selectConsumedProductModified]);
 
   const handleProductLoading = async () => {
     foodService.getConsumedProducts((result) => {
       console.log("Products loaded");
       console.log(result);
       setConsumedProducts(result);
+      dispatch(setConsumedProductsModified(false));
     });
   };
 
