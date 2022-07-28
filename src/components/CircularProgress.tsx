@@ -16,6 +16,8 @@ interface CircularProgressProps {
   delay: number;
   textColor: string;
   max: number;
+  text?: string;
+  fixedDigits? : number;
 }
 
 const CircularProgress: React.FC<CircularProgressProps> = ({
@@ -27,6 +29,8 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
   delay,
   textColor,
   max,
+  text = "KCal",
+  fixedDigits = 0,
 }) => {
   const animatedValue = React.useRef(new Animated.Value(0)).current;
   const halfCircle = radius + strokeWidth;
@@ -105,7 +109,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
           StyleSheet.absoluteFillObject,
           {
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
           },
         ]}
       >
@@ -123,7 +127,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
             },
           ]}
         />
-        <Text>KCal</Text>
+        <Text>{text}</Text>
       </View>
     </View>
   );

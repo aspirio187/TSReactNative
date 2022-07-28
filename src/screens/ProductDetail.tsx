@@ -22,10 +22,15 @@ import { PrivateValueStore } from "@react-navigation/native";
 import NutrimentCounter from "../components/NutrimentCounter";
 import ConsumedProduct from "../models/ConsumedProductModel";
 import { setConsumedProductsModified } from "../redux/consumedProductSlice";
+import { selectUser } from "../redux/userSlice";
 
 const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
   const dispatch = useDispatch();
   const barcode = useSelector(selectBarcode);
+  const userJson = useSelector(selectUser);
+
+  const foodService = new FoodService();
+
   const [product, setProduct] = React.useState<Product | null>(null);
   const [selected, setSelected] = React.useState<string | undefined>();
   const [carboHydrates, setCarboHydrates] = React.useState<number>();
@@ -33,9 +38,6 @@ const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
   const [protein, setProtein] = React.useState<number>();
   const [energyKCal, setEnergyKCal] = React.useState<number>();
   const [quantity, setQuantity] = React.useState<number>(100);
-  const foodService = new FoodService();
-
-  let carboHydratesRef = React.createRef();
 
   const mealTypes = ["Petit-déjeuner", "Déjeuner", "Dîner", "Snacks"];
 
@@ -53,7 +55,7 @@ const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
     setSelected(mealTypes[0]);
 
     fetchProduct().catch(console.error);
-  }, []);
+  }, [userJson]);
 
   return (
     <ScrollView style={{ marginHorizontal: 10 }}>
@@ -93,7 +95,7 @@ const ProductDetailPage: React.FC<BarcodeScannerPageProps> = (props) => {
           color={Colors.COLOR_DARK_GREEN}
           delay={0}
           textColor={Colors.COLOR_BLUE}
-          max={2500}
+          max={userJson === undefined ? 10000 : JSON.parse(userJson).goal}
         />
         <NutrimentCounter
           name="Glucides"
